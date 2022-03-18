@@ -16,12 +16,12 @@ public class MessageType {
     /**
      * RPC 请求消息。
      */
-    public static final int RPC_MESSAGE_TYPE_REQUEST = 101;
+    public static final int RPC_MESSAGE_TYPE_REQUEST = 1;
 
     /**
      * RPC 响应消息。
      */
-    public static final int RPC_MESSAGE_TYPE_RESPONSE = 102;
+    public static final int RPC_MESSAGE_TYPE_RESPONSE = 2;
 
     static {
         messageClasses.put(RPC_MESSAGE_TYPE_REQUEST, RpcRequestMessage.class);

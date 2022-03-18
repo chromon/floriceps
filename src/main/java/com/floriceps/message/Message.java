@@ -31,4 +31,12 @@ public abstract class Message implements Serializable {
     public static Class<? extends Message> getMessageClass(int messageType) {
         return MessageType.messageClasses.get(messageType);
     }
+
+    /**
+     * 获取当前消息的序列号。
+     * @return 消息的序列号。
+     */
+    public int getSequenceId() {
+        return sequenceId;
+    }
 }
