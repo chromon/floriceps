@@ -1,8 +1,5 @@
 package com.floriceps.config;
 
-import com.floriceps.protocol.Serializer;
-import com.floriceps.protocol.SerializerCollection;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

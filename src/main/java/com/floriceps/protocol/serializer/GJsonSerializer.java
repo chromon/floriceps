@@ -1,4 +1,4 @@
-package com.floriceps.protocol;
+package com.floriceps.protocol.serializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 使用 gson 处理序列化操作。
  */
-public class JsonSerializer implements Serializer {
+public class GJsonSerializer implements Serializer {
 
     /**
      * 反序列化。

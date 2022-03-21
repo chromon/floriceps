@@ -1,6 +1,8 @@
 package com.floriceps.codec;
 
+import com.floriceps.config.Global;
 import com.floriceps.message.Message;
+import com.floriceps.protocol.SerializerCollection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -52,7 +54,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         // 版本号
         byteBuf.writeByte(1);
         // 序列化方式
-        byteBuf.writeByte(0);
+        byteBuf.writeByte(Global.SERIALIZER_TYPE);
         // 消息类型
         byteBuf.writeByte(message.getMessageType());
         // 消息序列号
@@ -61,15 +63,13 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         byteBuf.writeByte(0xff);
 
         // 序列化消息
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(message);
-        byte[] bytes = bos.toByteArray();
+        byte[] bytes = Global.SERIALIZER.serialize(message);
         // 消息长度
         byteBuf.writeInt(bytes.length);
 
         // 消息内容
         byteBuf.writeBytes(bytes);
+        list.add(byteBuf);
     }
 
     /**
@@ -102,9 +102,12 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes, 0, length);
 
+        // 获取具体的消息类型
+        Class<? extends Message> messageClass = Message.getMessageClass(messageType);
         // 反序列化
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        Message message = (Message) ois.readObject();
+        Message message = (Message) SerializerCollection.getSerializerByType(serializerType)
+                .deserialize(messageClass, bytes);
+
         Log.info(magicNum + ", " + version + ", " + serializerType + ", "
                 + messageType + ", " + sequenceId + ", " + length);
 

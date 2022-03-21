@@ -39,4 +39,12 @@ public abstract class Message implements Serializable {
     public int getSequenceId() {
         return sequenceId;
     }
+
+    /**
+     * 设置当前消息的序列号
+     * @param sequenceId 序列号。
+     */
+    public void setSequenceId(int sequenceId) {
+        this.sequenceId = sequenceId;
+    }
 }

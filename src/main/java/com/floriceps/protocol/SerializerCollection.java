@@ -1,6 +1,9 @@
 package com.floriceps.protocol;
 
 import com.floriceps.config.Config;
+import com.floriceps.protocol.serializer.GJsonSerializer;
+import com.floriceps.protocol.serializer.JavaSerializer;
+import com.floriceps.protocol.serializer.Serializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +40,7 @@ public class SerializerCollection {
         addSerializer(type.incrementAndGet(), "Java", new JavaSerializer());
 
         // Gson Json
-        addSerializer(type.incrementAndGet(), "Json", new JsonSerializer());
+        addSerializer(type.incrementAndGet(), "Json", new GJsonSerializer());
     }
 
     /**

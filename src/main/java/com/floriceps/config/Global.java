@@ -1,6 +1,6 @@
 package com.floriceps.config;
 
-import com.floriceps.protocol.Serializer;
+import com.floriceps.protocol.serializer.Serializer;
 import com.floriceps.protocol.SerializerCollection;
 
 /**
@@ -27,4 +27,5 @@ public class Global {
      * 消息序列化算法类型。
      */
     public static final int SERIALIZER_TYPE = SerializerCollection.getSerializerType();
+
 }

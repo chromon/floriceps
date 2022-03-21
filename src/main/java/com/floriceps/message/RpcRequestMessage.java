@@ -30,8 +30,9 @@ public class RpcRequestMessage extends Message {
      */
     private Object[] parameterValues;
 
-    public RpcRequestMessage(String serviceName, String methodName, Class<?> returnType,
+    public RpcRequestMessage(int sequenceId, String serviceName, String methodName, Class<?> returnType,
                              Class[] parameterTypes, Object[] parameterValues) {
+        super.setSequenceId(sequenceId);
         this.serviceName = serviceName;
         this.methodName = methodName;
         this.returnType = returnType;
@@ -46,5 +47,25 @@ public class RpcRequestMessage extends Message {
     @Override
     public int getMessageType() {
         return MessageType.RPC_MESSAGE_TYPE_REQUEST;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public Class<?> getReturnType() {
+        return returnType;
+    }
+
+    public Class[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public Object[] getParameterValues() {
+        return parameterValues;
     }
 }

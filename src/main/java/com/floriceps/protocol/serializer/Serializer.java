@@ -1,4 +1,4 @@
-package com.floriceps.protocol;
+package com.floriceps.protocol.serializer;
 
 /**
  * 扩展序列化，反序列化接口。

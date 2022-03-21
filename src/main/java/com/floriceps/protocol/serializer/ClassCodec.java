@@ -1,4 +1,4 @@
-package com.floriceps.protocol;
+package com.floriceps.protocol.serializer;
 
 import com.google.gson.*;
 import com.google.gson.JsonSerializer;

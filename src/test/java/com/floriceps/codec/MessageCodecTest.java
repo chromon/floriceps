@@ -18,7 +18,7 @@ public class MessageCodecTest {
                 new LengthFieldBasedFrameDecoder(1024, 12,
                         4, 0, 0),
                 new MessageCodec());
-        RpcRequestMessage request = new RpcRequestMessage("com.test.Hello", "sayHello", String.class, new Class[] {String.class}, new Object[] {"ellery"});
+        RpcRequestMessage request = new RpcRequestMessage(1, "com.test.Hello", "sayHello", String.class, new Class[] {String.class}, new Object[] {"ellery"});
         // 出站写 encode
         channel.writeOutbound(request);
 
