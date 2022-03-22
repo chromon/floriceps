@@ -20,16 +20,25 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
     protected void channelRead0(ChannelHandlerContext channelHandlerContext,
                                 RpcRequestMessage rpcRequestMessage) throws Exception {
         RpcResponseMessage responseMessage = new RpcResponseMessage();
+        responseMessage.setSequenceId(rpcRequestMessage.getSequenceId());
 
         try {
+
+            // 接收到的接口类
+            String serviceName = rpcRequestMessage.getServiceName();
+            // 实现类
+            String serviceImplName = "com.floriceps.demo.service.ServerPrintService";
+
+
             // 反射调用服务
-            Class<?> clazz = Class.forName(rpcRequestMessage.getServiceName());
+//            Class<?> clazz = Class.forName(rpcRequestMessage.getServiceName());
+            Class<?> clazz = Class.forName(serviceImplName);
+
             Constructor<?> constructor = clazz.getConstructor();
             Object instance = constructor.newInstance();
             Method method = clazz.getMethod(rpcRequestMessage.getMethodName(), rpcRequestMessage.getParameterTypes());
             Object invoke = method.invoke(instance, rpcRequestMessage.getParameterValues());
 
-            responseMessage.setSequenceId(rpcRequestMessage.getSequenceId());
             responseMessage.setReturnValue(invoke);
         } catch (Exception e) {
             // 设置的消息最大传输帧为 1024，如果有异常，则异常的长度很有可能超过 1024

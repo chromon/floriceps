@@ -2,11 +2,14 @@ package com.floriceps.client;
 
 import com.floriceps.codec.MessageCodecSharable;
 import com.floriceps.config.Global;
+import com.floriceps.message.RpcRequestMessage;
+import com.floriceps.promise.Promises;
 import com.floriceps.protocol.ProtocolFrameDecoder;
 
 import static com.floriceps.utils.LogUtils.Log;
 
 import com.floriceps.handler.client.RpcResponseMessageHandler;
+import com.floriceps.utils.SequenceIdGenerator;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -15,6 +18,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultPromise;
+
+import java.lang.reflect.Proxy;
 
 /**
  * Rpc 客户端
@@ -23,6 +29,48 @@ public class RpcClient {
 
     private static volatile Channel channel = null;
     private static final Object LOCK = new Object();
+
+    /**
+     * 使用代理类创建 service 类
+     * @param serviceClass service 类。
+     * @param <T> service 类型。
+     * @return service 对象。
+     */
+    public static <T> T getProxyService(Class<T> serviceClass) {
+        ClassLoader loader = serviceClass.getClassLoader();
+        Class<?>[] interfaces = new Class[] {serviceClass};
+
+        Object obj = Proxy.newProxyInstance(loader, interfaces, (proxy, method, args) -> {
+            int sequenceId = SequenceIdGenerator.nextId();
+            // 将方法调用转换为消息对象
+            RpcRequestMessage req = new RpcRequestMessage(
+                    sequenceId,
+                    serviceClass.getName(),
+                    method.getName(),
+                    method.getReturnType(),
+                    method.getParameterTypes(),
+                    args
+            );
+            // 发送消息
+            getChannel().writeAndFlush(req);
+
+            // 使用 Promise 对象接收返回结果。
+            // 参数为指定 promise 对象异步接收结果线程。
+            DefaultPromise<Object> promise = new DefaultPromise<>(getChannel().eventLoop());
+            Promises.PROMISE_MAP.put(sequenceId, promise);
+
+            // 阻塞等待 promise 结果
+            promise.await();
+            if (promise.isSuccess()) {
+                // 调用正常
+                return promise.getNow();
+            }
+
+            // 调用失败
+            throw new RuntimeException(promise.cause());
+        });
+        return (T) obj;
+    }
 
     /**
      * 获取唯一 Channel （单例模式，双重校验锁）。
