@@ -43,8 +43,8 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
         } catch (Exception e) {
             // 设置的消息最大传输帧为 1024，如果有异常，则异常的长度很有可能超过 1024
             // 所以只返回部分异常消息。
-            responseMessage.setExceptionValue(
-                    new Exception("RPC request message handler: " + e.getMessage()));
+            responseMessage.setExceptionValue(new Exception("RPC request message handler: "
+                    + e.getCause().getMessage()));
             e.printStackTrace();
         }
 

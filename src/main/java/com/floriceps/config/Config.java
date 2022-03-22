@@ -56,4 +56,30 @@ public class Config {
     public static String getSerializer() {
         return properties.getProperty("message.serializer");
     }
+
+    /**
+     * 读取配置文件中的连接超时时间，默认为 1000 毫秒。
+     * @return 连接超时时间。
+     */
+    public static int getConnectTimeout() {
+        String value = properties.getProperty("connect.timeout.millis");
+
+        if (value == null) {
+            return 1000;
+        }
+        return Integer.parseInt(value);
+    }
+
+    /**
+     * 从配置文件中读取 Netty 客户端与服务端数据传输的最大帧数，默认为 1024。
+     * @return 数据传输的最大帧数。
+     */
+    public static int getMaxFrameLength() {
+        String value = properties.getProperty("max.frame.length");
+
+        if (value == null) {
+            return 1024;
+        }
+        return Integer.parseInt(value);
+    }
 }

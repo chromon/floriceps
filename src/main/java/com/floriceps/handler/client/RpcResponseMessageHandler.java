@@ -21,7 +21,7 @@ public class RpcResponseMessageHandler extends SimpleChannelInboundHandler<RpcRe
 
         // 从服务器返回的结果中获取相关信息并设置到对应 promise 中。
         // 根据序列号获取对应的 promise，并设置返回结果。
-        Promise<Object> promise = Promises.PROMISE_MAP.get(rpcResponseMessage.getSequenceId());
+        Promise<Object> promise = Promises.PROMISE_MAP.remove(rpcResponseMessage.getSequenceId());
 
         if (promise != null) {
             Object returnValue = rpcResponseMessage.getReturnValue();

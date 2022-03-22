@@ -2,7 +2,6 @@ package com.floriceps.demo;
 
 import com.floriceps.client.RpcClient;
 import com.floriceps.demo.service.PrintService;
-import com.floriceps.message.RpcRequestMessage;
 
 public class ClientTest {
     public static void main(String[] args) {
