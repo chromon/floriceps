@@ -22,7 +22,7 @@ public class RpcServer {
     /**
      * 初始化服务器。
      */
-    public static void initServer() {
+    private static void initServer() {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
@@ -52,5 +52,12 @@ public class RpcServer {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
+    }
+
+    /**
+     * 启动服务器
+     */
+    public static void startServer() {
+        initServer();
     }
 }

@@ -108,8 +108,8 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         Message message = (Message) SerializerCollection.getSerializerByType(serializerType)
                 .deserialize(messageClass, bytes);
 
-        Log.info(magicNum + ", " + version + ", " + serializerType + ", "
-                + messageType + ", " + sequenceId + ", " + length);
+//        Log.info(magicNum + ", " + version + ", " + serializerType + ", "
+//                + messageType + ", " + sequenceId + ", " + length);
 
         // 解析的数据需要保存到 list 中，提供给下一个 handler 使用。
         list.add(message);

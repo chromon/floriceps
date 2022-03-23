@@ -2,6 +2,8 @@ package com.floriceps.handler.server;
 
 import com.floriceps.message.RpcRequestMessage;
 import com.floriceps.message.RpcResponseMessage;
+import com.floriceps.service.Service;
+import com.floriceps.service.ServiceRegister;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -23,23 +25,17 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
         responseMessage.setSequenceId(rpcRequestMessage.getSequenceId());
 
         try {
-
             // 接收到的接口类
             String serviceName = rpcRequestMessage.getServiceName();
-            // 实现类
-            String serviceImplName = "com.floriceps.demo.service.ServerPrintService";
+            // 根据接口名查找到对应服务实例
+            Service service = ServiceRegister.findService(serviceName);
+            // 新建服务实例（如果没有的话）
+            service.newInstance();
+            // 调用方法
+            Object result = service.invokeMethod(rpcRequestMessage.getMethodName(), rpcRequestMessage.getParameterTypes(),
+                    rpcRequestMessage.getParameterValues());
 
-
-            // 反射调用服务
-//            Class<?> clazz = Class.forName(rpcRequestMessage.getServiceName());
-            Class<?> clazz = Class.forName(serviceImplName);
-
-            Constructor<?> constructor = clazz.getConstructor();
-            Object instance = constructor.newInstance();
-            Method method = clazz.getMethod(rpcRequestMessage.getMethodName(), rpcRequestMessage.getParameterTypes());
-            Object invoke = method.invoke(instance, rpcRequestMessage.getParameterValues());
-
-            responseMessage.setReturnValue(invoke);
+            responseMessage.setReturnValue(result);
         } catch (Exception e) {
             // 设置的消息最大传输帧为 1024，如果有异常，则异常的长度很有可能超过 1024
             // 所以只返回部分异常消息。
