@@ -1,0 +1,30 @@
+package com.floriceps.rpc_core.message;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 消息类型。
+ */
+public class MessageType {
+
+    /**
+     * 消息类型编号与消息类映射 map。
+     */
+    public static final Map<Integer, Class<? extends Message>> messageClasses = new HashMap<>();
+
+    /**
+     * RPC 请求消息。
+     */
+    public static final int RPC_MESSAGE_TYPE_REQUEST = 1;
+
+    /**
+     * RPC 响应消息。
+     */
+    public static final int RPC_MESSAGE_TYPE_RESPONSE = 2;
+
+    static {
+        messageClasses.put(RPC_MESSAGE_TYPE_REQUEST, RpcRequestMessage.class);
+        messageClasses.put(RPC_MESSAGE_TYPE_RESPONSE, RpcResponseMessage.class);
+    }
+}
