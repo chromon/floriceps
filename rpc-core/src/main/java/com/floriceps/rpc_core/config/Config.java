@@ -82,4 +82,79 @@ public class Config {
         }
         return Integer.parseInt(value);
     }
+
+    /**
+     * 读取配置文件中的 zookeeper 连接地址。
+     *
+     * @return zookeeper 地址。
+     */
+    public static String getZkConnectString() {
+        return properties.getProperty("zk.connect.string");
+    }
+
+    /**
+     * 从配置文件中读取 zookeeper 会话超时时间（ms）。
+     * @return 会话超时时间。
+     */
+    public static int getZkSessionTimeoutMs() {
+        String value = properties.getProperty("zk.session.timeout.ms");
+
+        if (value == null) {
+            return 60 * 1000;
+        }
+        return Integer.parseInt(value);
+    }
+
+    /**
+     * 从配置文件中读取 zookeeper 连接超时时间（ms）。
+     * @return 连接超时时间。
+     */
+    public static int getZkConnectionTimeoutMs() {
+        String value = properties.getProperty("zk.connection.timeout.ms");
+
+        if (value == null) {
+            return 15 * 1000;
+        }
+        return Integer.parseInt(value);
+    }
+
+    /**
+     * 读取配置文件中的 zookeeper 服务注册节点根目录。
+     *
+     * @return 服务注册节点根目录地址。
+     */
+    public static String getZkBasePath() {
+        return properties.getProperty("zk.base.path");
+    }
+
+    /**
+     * 读取配置文件中的 zookeeper 负载均衡策略。
+     *
+     * @return 负载均衡策略实现全限定名。
+     */
+    public static String getZkLoadBalance() {
+        return properties.getProperty("zk.load.balance");
+    }
+
+    /**
+     * 从配置文件中读取 zookeeper 一致性 hash 算法虚拟节点个数，默认为 10 个。
+     * @return 虚拟节点个数。
+     */
+    public static int getZkConsistentHashingVN() {
+        String value = properties.getProperty("zk.consistent.hashing.vn");
+
+        if (value == null) {
+            return 10;
+        }
+        return Integer.parseInt(value);
+    }
+
+    /**
+     * 读取配置文件中服务注册名称。
+     *
+     * @return 服务注册名称
+     */
+    public static String getZkServiceName() {
+        return properties.getProperty("zk.service.name");
+    }
 }
