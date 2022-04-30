@@ -2,6 +2,7 @@ package com.floriceps.rpc_core.codec;
 
 import com.floriceps.rpc_core.config.Global;
 import com.floriceps.rpc_core.message.Message;
+import com.floriceps.rpc_core.message.MessageConst;
 import com.floriceps.rpc_core.protocol.SerializerCollection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -43,9 +44,9 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         ByteBuf byteBuf = channelHandlerContext.alloc().buffer();
 
         // 魔数
-        byteBuf.writeInt(0xacebabe);
+        byteBuf.writeInt(MessageConst.MAGIC_NUM);
         // 版本号
-        byteBuf.writeByte(1);
+        byteBuf.writeByte(MessageConst.VERSION);
         // 序列化方式
         byteBuf.writeByte(Global.SERIALIZER_TYPE);
         // 消息类型
@@ -53,7 +54,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         // 消息序列号
         byteBuf.writeInt(message.getSequenceId());
         // 对齐填充
-        byteBuf.writeByte(0xff);
+        byteBuf.writeByte(MessageConst.PADDING);
 
         // 序列化消息
         byte[] bytes = Global.SERIALIZER.serialize(message);
@@ -78,6 +79,11 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
                           List<Object> list) throws Exception {
         // 魔数
         int magicNum = byteBuf.readInt();
+
+        if (magicNum != MessageConst.MAGIC_NUM) {
+            throw new IllegalArgumentException("magic number is illegal: " + magicNum);
+        }
+
         // 版本号
         byte version = byteBuf.readByte();
         // 序列化类型

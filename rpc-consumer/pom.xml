@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.floriceps.rpc_provider</groupId>
-    <artifactId>rpc-provider</artifactId>
+    <artifactId>rpc-consumer</artifactId>
 
     <dependencies>
         <dependency>
@@ -26,15 +25,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.floriceps.rpc_server</groupId>
-            <artifactId>rpc-server</artifactId>
+            <groupId>com.floriceps.rpc_client</groupId>
+            <artifactId>rpc-client</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
-    <properties>
-        <aspectj.version>11</aspectj.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
 </project>

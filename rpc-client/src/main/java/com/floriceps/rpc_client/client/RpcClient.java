@@ -3,6 +3,7 @@ package com.floriceps.rpc_client.client;
 import com.floriceps.rpc_core.codec.MessageCodecSharable;
 import com.floriceps.rpc_core.config.Global;
 import com.floriceps.rpc_client.handler.RpcResponseMessageHandler;
+import com.floriceps.rpc_core.discovery.ZookeeperDiscoveryService;
 import com.floriceps.rpc_core.message.RpcRequestMessage;
 import com.floriceps.rpc_core.promise.Promises;
 import com.floriceps.rpc_core.protocol.ProtocolFrameDecoder;
@@ -19,6 +20,8 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultPromise;
 
 import java.lang.reflect.Proxy;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import static com.floriceps.rpc_core.utils.LogUtils.Log;
 
@@ -119,6 +122,10 @@ public class RpcClient {
         });
 
         try {
+            // 服务发现
+            ZookeeperDiscoveryService service = new ZookeeperDiscoveryService();
+            service.discovery(Global.ZK_SERVICE_NAME, getClientHost());
+
             // 建立连接
             channel = bootstrap.connect(Global.SERVER_HOST, Global.SERVER_PORT).sync().channel();
             // 使用异步关闭连接模式，sync() 方法为同步关闭，会一直阻塞直到连接关闭。
@@ -128,5 +135,15 @@ public class RpcClient {
         } catch (Exception e) {
             Log.error("Client error:", e);
         }
+    }
+
+    /**
+     * 获取客户端 IP 地址字符串
+     * @return IP 地址字符串
+     * @throws UnknownHostException
+     */
+    private static String getClientHost() throws UnknownHostException {
+        InetAddress address = InetAddress.getLocalHost();
+        return address.getHostAddress() + ":" + address.getHostName();
     }
 }

@@ -1,5 +1,6 @@
 package com.floriceps.rpc_server.server;
 
+import com.floriceps.rpc_core.Register.ZooKeeperRegistryService;
 import com.floriceps.rpc_core.codec.MessageCodecSharable;
 import com.floriceps.rpc_core.config.Global;
 import com.floriceps.rpc_core.protocol.ProtocolFrameDecoder;
@@ -22,11 +23,12 @@ public class RpcServer {
     /**
      * 初始化服务器。
      */
-    private static void initServer() {
+    private static void initServer() throws Exception {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
         MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
+        ZooKeeperRegistryService service = null;
 
         // RPC 请求消息处理器
         RpcRequestMessageHandler RPC_REQUEST_HANDLER = new RpcRequestMessageHandler();
@@ -44,11 +46,21 @@ public class RpcServer {
                     ch.pipeline().addLast(RPC_REQUEST_HANDLER);
                 }
             });
+
+            // 服务注册
+            service = new ZooKeeperRegistryService(
+                    Global.ZK_SERVICE_NAME, Global.SERVER_HOST,
+                    Global.SERVER_PORT, "rpc server");;
+            service.register();
+
             Channel channel = serverBootstrap.bind(Global.SERVER_PORT).sync().channel();
             channel.closeFuture().sync();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             Log.error("server error", e);
         } finally {
+            service.unRegister();
+            service.destroy();
+
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
@@ -58,6 +70,10 @@ public class RpcServer {
      * 启动服务器
      */
     public static void startServer() {
-        initServer();
+        try {
+            initServer();
+        } catch (Exception e) {
+            Log.error("start server err:", e);
+        }
     }
 }

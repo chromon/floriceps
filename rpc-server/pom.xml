@@ -25,11 +25,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.floriceps.rpc_provider</groupId>
-            <artifactId>rpc-provider</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <properties>

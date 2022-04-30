@@ -80,14 +80,4 @@ public class ZooKeeperRegistryService implements RegistryService {
     public void destroy() throws IOException {
         serviceDiscovery.close();
     }
-
-    public static void main(String[] args) throws Exception {
-        ZooKeeperRegistryService service = new ZooKeeperRegistryService(
-                Global.ZK_SERVICE_NAME, "127.0.0.1", 4857, "first server");
-        service.register();
-
-        while (true) {
-
-        }
-    }
 }

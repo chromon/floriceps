@@ -1,8 +1,6 @@
 package com.floriceps.rpc_core.discovery;
 
-import com.floriceps.rpc_core.balancer.ConsistentHashing;
 import com.floriceps.rpc_core.balancer.LoadBalance;
-import com.floriceps.rpc_core.balancer.RandomBalance;
 import com.floriceps.rpc_core.config.Global;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -11,7 +9,6 @@ import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 
-import javax.print.attribute.standard.RequestingUserName;
 import java.util.Collection;
 
 /**
@@ -79,10 +76,5 @@ public class ZookeeperDiscoveryService implements DiscoveryService {
                 System.out.println("\t" + instance);
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        ZookeeperDiscoveryService service = new ZookeeperDiscoveryService();
-        service.discovery(Global.ZK_SERVICE_NAME, "localhost:12344");
     }
 }
